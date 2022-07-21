@@ -1,7 +1,7 @@
 
 import rospy
 from ros_interop.srv import MissionRequest
-from ros_interop.msg import RequestType, FlyZone, StationaryObstacle, Mission
+from ros_interop.msg import RequestType, FlyZone, StationaryObstacle, mission
 from geographic_msgs.msg import GeoPoint
 
 
@@ -11,15 +11,15 @@ class InteropLoader(object):
 
     def __init__(self, mission_proxy:rospy.ServiceProxy, id:int) -> None:
         self.mission_proxy = mission_proxy
-        self.mission: Mission = None
+        self.mission: mission = None
         if id is not None:
             self.get_mission(id)
 
     def get_mission(self, id: int) -> None:
         mission_req = MissionRequest()
         mission_req.mission_id = id
-        mission_req.request_type = RequestType.GET
-        self.mission = self.mission_proxy(mission_req)
+        mission_req.request_type = RequestType(RequestType.GET)
+        self.mission = self.mission_proxy(mission_req).mission_info
 
     def get_mission_id(self) -> int:
         return self.mission.id if self.mission is not None else None
